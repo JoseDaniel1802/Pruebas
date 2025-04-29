@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubicación en Google Maps o Waze</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .ubicacion {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        a {
+            display: block;
+            margin: 10px 0;
+            font-size: 18px;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Obtener mi ubicación</h1>
+    <button id="obtenerUbicacion">Obtener Ubicación</button>
+
+    <div class="ubicacion" id="ubicacion"></div>
+    <div id="enlaces"></div>
+
+    <script>
+        document.getElementById('obtenerUbicacion').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(posicion) {
+                        const latitud = posicion.coords.latitude;
+                        const longitud = posicion.coords.longitude;
+
+                        document.getElementById('ubicacion').innerHTML = `
+                            <strong>Latitud:</strong> ${latitud} <br>
+                            <strong>Longitud:</strong> ${longitud}
+                        `;
+
+                        // Crear enlaces
+                        const enlaceGoogleMaps = `https://www.google.com/maps?q=${latitud},${longitud}`;
+                        const enlaceWaze = `https://waze.com/ul?ll=${latitud},${longitud}&navigate=yes`;
+
+                        document.getElementById('enlaces').innerHTML = `
+                            <a href="${enlaceGoogleMaps}" target="_blank">Abrir en Google Maps</a>
+                            <a href="${enlaceWaze}" target="_blank">Abrir en Waze</a>
+                        `;
+
+                        console.log(`Latitud: ${latitud}, Longitud: ${longitud}`);
+                    },
+                    function(error) {
+                        document.getElementById('ubicacion').innerText = 'Error al obtener la ubicación.';
+                        console.error(error);
+                    }
+                );
+            } else {
+                alert('La geolocalización no es compatible con este navegador.');
+            }
+        });
+    </script>
+
+</body>
+</html>
